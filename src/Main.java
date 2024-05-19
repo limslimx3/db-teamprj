@@ -1,9 +1,10 @@
+import view.LoginView;
 import view.MovieSearchView;
 
 import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MovieSearchView().setVisible(true));
+        SwingUtilities.invokeLater(() -> new LoginView().setVisible(true));
     }
 }

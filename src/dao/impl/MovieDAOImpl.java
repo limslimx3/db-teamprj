@@ -9,8 +9,8 @@ import java.util.List;
 
 public class MovieDAOImpl implements MovieDAO {
     private String jdbcURL = "jdbc:mysql://localhost:3306/db1";
-    private String jdbcUsername = "root";
-    private String jdbcPassword = "Sejong24!!";
+    private String jdbcUsername = "user1";
+    private String jdbcPassword = "user1";
 
     private static final String INSERT_MOVIE_SQL = "INSERT INTO 영화 (영화명, 감독명, 배우명, 장르, 썸네일경로) VALUES (?, ?, ?, ?, ?)";
     private static final String SELECT_MOVIE_BY_ID = "SELECT 영화번호, 영화명, 감독명, 배우명, 장르, 썸네일경로 FROM 영화 WHERE 영화번호 = ?";
