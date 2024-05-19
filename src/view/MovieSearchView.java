@@ -204,6 +204,16 @@ public class MovieSearchView extends JFrame {
         actorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         textPanel.add(actorLabel);
 
+
+        // 예매하기 버튼 추가
+        JButton bookButton = new JButton("Book Now");
+        bookButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new BookingView(movie.getId(), 1).setVisible(true);
+            }
+        });
+        textPanel.add(bookButton);
         panel.add(textPanel, BorderLayout.CENTER);
 
         return panel;
