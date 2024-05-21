@@ -24,6 +24,7 @@ public class MovieSearchView extends JFrame {
     private JPanel moviePanel;
     private JScrollPane scrollPane;
     private int columns = 3;  // 초기 열 개수
+    private int memberId = 1;  // 임의의 회원 ID 설정
 
     public MovieSearchView() {
         // 검색 패널 생성
@@ -73,6 +74,12 @@ public class MovieSearchView extends JFrame {
         gbc.gridwidth = 2;
         searchPanel.add(searchButton, gbc);
 
+        // 예매 내역 버튼 추가
+        JButton bookingHistoryButton = new JButton("Booking History");
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        searchPanel.add(bookingHistoryButton, gbc);
+
         add(searchPanel, BorderLayout.NORTH);
 
         // 영화 목록 패널 생성
@@ -94,6 +101,14 @@ public class MovieSearchView extends JFrame {
                 String actor = actorField.getText();
                 String genre = genreField.getText();
                 searchMovies(title, director, actor, genre);
+            }
+        });
+
+        // 예매 내역 버튼 클릭 이벤트 설정
+        bookingHistoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new BookedListView(memberId).setVisible(true);
             }
         });
 
@@ -204,13 +219,12 @@ public class MovieSearchView extends JFrame {
         actorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         textPanel.add(actorLabel);
 
-
         // 예매하기 버튼 추가
         JButton bookButton = new JButton("Book Now");
         bookButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new BookingView(movie.getId(), 1).setVisible(true);
+                new BookingView(movie.getId(), memberId).setVisible(true);
             }
         });
         textPanel.add(bookButton);
