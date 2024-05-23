@@ -51,7 +51,7 @@ public class BookingView extends JFrame {
         selectionPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         // 상영관 선택
-        selectionPanel.add(new JLabel("Theater:"));
+        selectionPanel.add(new JLabel("상영관:"));
         theaterComboBox = new JComboBox<>();
         loadTheaters();
         theaterComboBox.addActionListener(new ActionListener() {
@@ -63,26 +63,30 @@ public class BookingView extends JFrame {
         selectionPanel.add(theaterComboBox);
 
         // 상영 요일 선택
-        selectionPanel.add(new JLabel("Day:"));
+        selectionPanel.add(new JLabel("날짜:"));
         dayComboBox = new JComboBox<>();
         selectionPanel.add(dayComboBox);
 
         // 상영 시간 선택
-        selectionPanel.add(new JLabel("Time:"));
+        selectionPanel.add(new JLabel("시간:"));
         timeComboBox = new JComboBox<>();
         selectionPanel.add(timeComboBox);
 
         // 인원 선택
-        selectionPanel.add(new JLabel("People:"));
+        selectionPanel.add(new JLabel("인원수:"));
         peopleComboBox = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5});
         peopleComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 maxSeats = (Integer) peopleComboBox.getSelectedItem();
                 resetSeats();
+                seatPanel.revalidate();
+                seatPanel.repaint();
             }
         });
         selectionPanel.add(peopleComboBox);
+
+
 
         add(selectionPanel, BorderLayout.NORTH);
 
@@ -95,7 +99,7 @@ public class BookingView extends JFrame {
         seatButtons = new ArrayList<>();
 
         // 예매 버튼
-        JButton bookButton = new JButton("Book Now");
+        JButton bookButton = new JButton("예매하기");
         bookButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -108,6 +112,9 @@ public class BookingView extends JFrame {
         maxSeats = (Integer) peopleComboBox.getSelectedItem();
     }
 
+    /**
+     * 상영관 콤보박스에 해당 영화가 상영되는 상영관 리스트 로드
+     */
     private void loadTheaters() {
         List<String> theaters = theaterDAO.getTheaters(movieId);
         theaterComboBox.removeAllItems();
@@ -116,6 +123,9 @@ public class BookingView extends JFrame {
         }
     }
 
+    /**
+     * 선택된 상영관에 대한 상영일정 로드
+     */
     private void loadSchedules() {
         String theaterId = (String) theaterComboBox.getSelectedItem();
         List<Schedule> schedules = theaterDAO.getSchedules(movieId, theaterId);
@@ -131,6 +141,9 @@ public class BookingView extends JFrame {
         }
     }
 
+    /**
+     * 선택된 영화관과 영화일정에 대해 티켓이 존재하지 않는 좌석 정보 로드
+     */
     private void loadSeats(int theaterId, int scheduleId) {
         List<Seat> seats = theaterDAO.getSeats(theaterId, scheduleId);
         seatPanel.removeAll();
@@ -151,17 +164,20 @@ public class BookingView extends JFrame {
         selectedSeatsCount = 0;
         selectedSeats.clear();
         for (JButton seatButton : seatButtons) {
-            if (seatButton.isEnabled()) {
                 seatButton.setBackground(null);
-            }
+                seatButton.setEnabled(true);  // 모든 좌석 버튼을 다시 활성화합니다.
         }
     }
 
+    /**
+     * 특정 좌석 예매하기
+     *  - 같은 시간에 상영하는 영화에 대해 같은 좌석에 대한 중복 예매가 불가능하도록 처리
+     */
     private void bookSeats() {
         if (selectedSeatsCount == maxSeats) {
             int theaterId = Integer.parseInt((String) theaterComboBox.getSelectedItem());
-            bookingDAO.bookSeats(selectedSeats, theaterId, scheduleId, "Credit Card", "Paid", 150.00, memberId); // 결제 정보를 예시로 삽입
-            JOptionPane.showMessageDialog(this, "Booking confirmed!");
+            bookingDAO.createBook(selectedSeats, theaterId, scheduleId, "Credit Card", "Paid", 150.00, memberId); // 결제 정보를 예시로 삽입
+            JOptionPane.showMessageDialog(this, "예매완료!!!");
             loadSeats(theaterId, scheduleId); // 좌석 상태를 갱신
         } else {
             JOptionPane.showMessageDialog(this, "Please select " + maxSeats + " seats.");

@@ -112,6 +112,9 @@ public class MovieDAOImpl implements MovieDAO {
         }
     }
 
+    /**
+     * 제목,감독,배우,장르로 영화 리스트 조회
+     */
     @Override
     public List<Movie> searchMovies(String title, String director, String actor, String genre) {
         List<Movie> movies = new ArrayList<>();

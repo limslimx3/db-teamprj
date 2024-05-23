@@ -24,6 +24,9 @@ public class TheaterDAOImpl implements TheaterDAO {
         return connection;
     }
 
+    /**
+     * 영화Id에 대한 상영관 리스트 조회
+     */
     public List<String> getTheaters(Long movieId) {
         List<String> theaters = new ArrayList<>();
         String sql = "SELECT DISTINCT 상영관.상영관번호 " +
@@ -44,6 +47,9 @@ public class TheaterDAOImpl implements TheaterDAO {
         return theaters;
     }
 
+    /**
+     * 해당 영화와 상영관Id에 따른 상영일정 리스트 조회
+     */
     public List<Schedule> getSchedules(Long movieId, String theaterId) {
         List<Schedule> schedules = new ArrayList<>();
         String sql = "SELECT 상영일정번호, 상영요일, 상영시작시간 " +
@@ -68,6 +74,10 @@ public class TheaterDAOImpl implements TheaterDAO {
         return schedules;
     }
 
+    /**
+     * 상영관Id, 상영일정Id에 따른 좌석 리스트 조회
+     *  - 해당 좌석에 대해 조인한 결과 티켓 테이블에 값이 존재하지 않는다면 조회X
+     */
     public List<Seat> getSeats(int theaterId, int scheduleId) {
         List<Seat> seats = new ArrayList<>();
         String sql = "SELECT 좌석.좌석번호, 티켓.티켓번호 IS NULL AS 좌석사용여부 " +

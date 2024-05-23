@@ -29,7 +29,7 @@ public class BookedListView extends JFrame {
         loadBookingHistory(bookingPanel);
 
         // 기본 설정
-        setTitle("Booking History");
+        setTitle("예매내역");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -49,7 +49,7 @@ public class BookedListView extends JFrame {
             StringBuilder seatsInfo = new StringBuilder();
             for (int i = 0; i < booking.getSeats().size(); i++) {
                 seatsInfo.append(booking.getSeats().get(i))
-                        .append(" ($")
+                        .append(" (₩")
                         .append(booking.getPrices().get(i))
                         .append(")");
                 if (i < booking.getSeats().size() - 1) {
@@ -69,7 +69,7 @@ public class BookedListView extends JFrame {
             panel.add(bookingInfo, BorderLayout.CENTER);
 
             // 상세 조회 버튼 추가
-            JButton detailButton = new JButton("View Details");
+            JButton detailButton = new JButton("예매내역 상세 조회");
             detailButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

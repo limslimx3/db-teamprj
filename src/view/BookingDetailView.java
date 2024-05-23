@@ -51,7 +51,7 @@ public class BookingDetailView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(detailPanel);
         add(scrollPane, BorderLayout.CENTER);
 
-        setTitle("Booking Details");
+        setTitle("예매내역 상세");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);

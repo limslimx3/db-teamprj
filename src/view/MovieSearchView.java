@@ -38,7 +38,7 @@ public class MovieSearchView extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        searchPanel.add(new JLabel("Title:"), gbc);
+        searchPanel.add(new JLabel("제목:"), gbc);
 
         titleField = new JTextField(15);
         gbc.gridx = 1;
@@ -46,7 +46,7 @@ public class MovieSearchView extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        searchPanel.add(new JLabel("Director:"), gbc);
+        searchPanel.add(new JLabel("감독:"), gbc);
 
         directorField = new JTextField(15);
         gbc.gridx = 1;
@@ -54,7 +54,7 @@ public class MovieSearchView extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        searchPanel.add(new JLabel("Actor:"), gbc);
+        searchPanel.add(new JLabel("배우:"), gbc);
 
         actorField = new JTextField(15);
         gbc.gridx = 1;
@@ -62,20 +62,20 @@ public class MovieSearchView extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        searchPanel.add(new JLabel("Genre:"), gbc);
+        searchPanel.add(new JLabel("장르:"), gbc);
 
         genreField = new JTextField(15);
         gbc.gridx = 1;
         searchPanel.add(genreField, gbc);
 
-        searchButton = new JButton("Search");
+        searchButton = new JButton("영화 검색");
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
         searchPanel.add(searchButton, gbc);
 
         // 예매 내역 버튼 추가
-        JButton bookingHistoryButton = new JButton("Booking History");
+        JButton bookingHistoryButton = new JButton("예매내역 조회");
         gbc.gridx = 1;
         gbc.gridy = 5;
         searchPanel.add(bookingHistoryButton, gbc);
@@ -123,7 +123,7 @@ public class MovieSearchView extends JFrame {
         adjustGridLayout();
 
         // 기본 설정
-        setTitle("Movie Search");
+        setTitle("영화 조회");
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -143,6 +143,9 @@ public class MovieSearchView extends JFrame {
         moviePanel.revalidate();
     }
 
+    /**
+     * 영화 제목, 감독, 배우, 장르에 따라 영화를 조회후 화면에 렌더링
+     */
     private void searchMovies(String title, String director, String actor, String genre) {
         MovieDAOImpl movieDAO = new MovieDAOImpl();
         List<Movie> movies = movieDAO.searchMovies(title, director, actor, genre);
@@ -166,6 +169,9 @@ public class MovieSearchView extends JFrame {
         moviePanel.repaint();
     }
 
+    /**
+     * 각 영화 정보를 담는 패널 생성
+     */
     private JPanel createMoviePanel(Movie movie) {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(5, 5));
@@ -220,7 +226,7 @@ public class MovieSearchView extends JFrame {
         textPanel.add(actorLabel);
 
         // 예매하기 버튼 추가
-        JButton bookButton = new JButton("Book Now");
+        JButton bookButton = new JButton("예매하기");
         bookButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
