@@ -123,4 +123,54 @@ public class BookingDAOImpl implements BookingDAO {
 
         return bookings;
     }
+
+    /**
+     * 예매 취소
+     *  - 기존 예매한 좌석이나 티켓 정보 등 원래대로 복원
+     */
+    public void deleteBooking(int bookingId) {
+        String selectSeatsSql = "SELECT 좌석번호 FROM 티켓 WHERE 예매번호 = ?";
+        String deleteTicketsSql = "DELETE FROM 티켓 WHERE 예매번호 = ?";
+        String deleteBookingSql = "DELETE FROM 예매 WHERE 예매번호 = ?";
+        String updateSeatSql = "UPDATE 좌석 SET 좌석사용여부 = 0 WHERE 좌석번호 = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement selectSeatsStmt = conn.prepareStatement(selectSeatsSql);
+             PreparedStatement deleteTicketsStmt = conn.prepareStatement(deleteTicketsSql);
+             PreparedStatement deleteBookingStmt = conn.prepareStatement(deleteBookingSql);
+             PreparedStatement updateSeatStmt = conn.prepareStatement(updateSeatSql)) {
+
+            conn.setAutoCommit(false); // 트랜잭션 시작
+
+            // 예매된 좌석 번호 가져오기
+            selectSeatsStmt.setInt(1, bookingId);
+            ResultSet rs = selectSeatsStmt.executeQuery();
+            List<Integer> seatNumbers = new ArrayList<>();
+            while (rs.next()) {
+                seatNumbers.add(rs.getInt("좌석번호"));
+            }
+
+            // 예매 삭제
+            deleteTicketsStmt.setInt(1, bookingId);
+            deleteTicketsStmt.executeUpdate();
+
+            deleteBookingStmt.setInt(1, bookingId);
+            deleteBookingStmt.executeUpdate();
+
+            // 좌석 상태 업데이트
+            for (int seatNumber : seatNumbers) {
+                updateSeatStmt.setInt(1, seatNumber);
+                updateSeatStmt.executeUpdate();
+            }
+
+            conn.commit(); // 트랜잭션 커밋
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try (Connection conn = getConnection()) {
+                conn.rollback(); // 트랜잭션 롤백
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+        }
+    }
 }

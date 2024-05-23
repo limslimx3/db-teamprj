@@ -5,6 +5,9 @@ import java.util.List;
 
 public class Booking {
     private int id;
+    private int memberId;
+    private int theaterId;
+    private int scheduleId;
     private String movieTitle;
     private String theaterName;
     private String showDate;
@@ -25,6 +28,30 @@ public class Booking {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(int memberId) {
+        this.memberId = memberId;
+    }
+
+    public int getTheaterId() {
+        return theaterId;
+    }
+
+    public void setTheaterId(int theaterId) {
+        this.theaterId = theaterId;
+    }
+
+    public int getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(int scheduleId) {
+        this.scheduleId = scheduleId;
     }
 
     public String getMovieTitle() {

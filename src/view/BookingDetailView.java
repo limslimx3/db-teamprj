@@ -1,5 +1,6 @@
 package view;
 
+import dao.impl.BookingDAOImpl;
 import domain.Booking;
 
 import javax.swing.*;
@@ -12,21 +13,13 @@ public class BookingDetailView extends JFrame {
     public BookingDetailView(Booking booking) {
         this.booking = booking;
 
-        // 상세 정보 패널 생성
         JPanel detailPanel = new JPanel();
         detailPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         detailPanel.setLayout(new BoxLayout(detailPanel, BoxLayout.Y_AXIS));
 
-        // 상세 정보 표시
         StringBuilder seatsInfo = new StringBuilder();
-        for (int i = 0; i < booking.getSeats().size(); i++) {
-            seatsInfo.append(booking.getSeats().get(i))
-                    .append(" ($")
-                    .append(booking.getPrices().get(i))
-                    .append(")");
-            if (i < booking.getSeats().size() - 1) {
-                seatsInfo.append(", ");
-            }
+        for (String seat : booking.getSeats()) {
+            seatsInfo.append(seat).append(", ");
         }
 
         JLabel detailInfo = new JLabel("<html>" +
@@ -38,16 +31,26 @@ public class BookingDetailView extends JFrame {
                 "Show Day: " + booking.getShowDay() + "<br>" +
                 "Show Time: " + booking.getShowTime() + "<br>" +
                 "Theater Number: " + booking.getTheaterNumber() + "<br>" +
-                "Seats: " + seatsInfo.toString() +
+                "Seats: " + seatsInfo.substring(0, seatsInfo.length() - 2) +  // Remove the last comma
                 "</html>");
         detailInfo.setBorder(new EmptyBorder(10, 10, 10, 10));
         detailPanel.add(detailInfo);
 
-        // 스크롤 패널 추가
+        JButton deleteButton = new JButton("Delete Booking");
+        deleteButton.addActionListener(e -> {
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this booking?", "Delete Booking", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                BookingDAOImpl bookingDAO = new BookingDAOImpl();
+                bookingDAO.deleteBooking(booking.getId());
+                JOptionPane.showMessageDialog(null, "Booking deleted successfully.");
+                dispose(); // Close the current window
+            }
+        });
+        detailPanel.add(deleteButton);
+
         JScrollPane scrollPane = new JScrollPane(detailPanel);
         add(scrollPane, BorderLayout.CENTER);
 
-        // 기본 설정
         setTitle("Booking Details");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
