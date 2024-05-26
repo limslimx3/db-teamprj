@@ -28,7 +28,7 @@ public class BookingDAOImpl implements BookingDAO {
     /**
      * 예매 및 티켓 데이터 삽입
      */
-    public void createBook(List<String> seatNumbers, int theaterId, int scheduleId, String paymentMethod, String paymentStatus, double amount, int memberId) {
+    public void createBooking(List<String> seatNumbers, int theaterId, int scheduleId, String paymentMethod, String paymentStatus, double amount, int memberId) {
         String bookingSql = "INSERT INTO 예매 (결제방법, 결제상태, 결제금액, 결제일자, 회원번호) VALUES (?, ?, ?, CURDATE(), ?)";
         String ticketSql = "INSERT INTO 티켓 (발권여부, 표준가격, 판매가격, 예매번호, 상영일정번호, 상영관번호, 좌석번호) VALUES (1, ?, ?, ?, ?, ?, ?)";
 
@@ -48,13 +48,13 @@ public class BookingDAOImpl implements BookingDAO {
             // 예매 번호 가져오기
             try (var generatedKeys = bookingStmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    int bookingId = generatedKeys.getInt(1);
+                    int bookId = generatedKeys.getInt(1);
 
                     // 티켓 정보 삽입
                     for (String seatNumber : seatNumbers) {
                         ticketStmt.setDouble(1, amount / seatNumbers.size());
                         ticketStmt.setDouble(2, amount / seatNumbers.size());
-                        ticketStmt.setInt(3, bookingId);
+                        ticketStmt.setInt(3, bookId);
                         ticketStmt.setInt(4, scheduleId);
                         ticketStmt.setInt(5, theaterId);
                         ticketStmt.setInt(6, Integer.parseInt(seatNumber));
@@ -135,7 +135,7 @@ public class BookingDAOImpl implements BookingDAO {
         String selectSeatsSql = "SELECT 좌석번호 FROM 티켓 WHERE 예매번호 = ?";
         String deleteTicketsSql = "DELETE FROM 티켓 WHERE 예매번호 = ?";
         String deleteBookingSql = "DELETE FROM 예매 WHERE 예매번호 = ?";
-        String updateSeatSql = "UPDATE 좌석 SET 좌석사용여부 = 0 WHERE 좌석번호 = ?";
+        String updateSeatSql = "UPDATE 좌석 SET 좌석사용여부 = 0 WHERE 좌석번호 = ?";   //이거는 뺄지말지 고민중임
 
         try (Connection conn = getConnection();
              PreparedStatement selectSeatsStmt = conn.prepareStatement(selectSeatsSql);
@@ -176,4 +176,70 @@ public class BookingDAOImpl implements BookingDAO {
             }
         }
     }
+
+    @Override
+    public void updateBooking(int bookingId, String theaterId, int scheduleId, List<String> selectedSeats, String paymentMethod, String paymentStatus, double amount) {
+        String deleteTicketSql = "DELETE FROM 티켓 WHERE 예매번호 = ?"; // 예매번호에 해당하는 티켓 삭제
+        String insertTicketSQL = "INSERT INTO 티켓 (발권여부, 표준가격, 판매가격, 예매번호, 상영일정번호, 상영관번호, 좌석번호) VALUES (1, ?, ?, ?, ?, ?, ?)";
+        String updateBookingSql = "UPDATE 예매 SET 결제방법 = ?, 결제상태 = ?, 결제금액 = ?, 결제일자 = CURDATE() WHERE 예매번호 = ?";
+
+        Connection conn = null;
+        PreparedStatement updateBookingStmt = null;
+        PreparedStatement deleteTicketStmt = null;
+        PreparedStatement insertTicketStmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false); // 트랜잭션 시작
+
+            // 티켓 삭제
+            deleteTicketStmt = conn.prepareStatement(deleteTicketSql);
+            deleteTicketStmt.setInt(1, bookingId);
+            deleteTicketStmt.executeUpdate();
+
+            // 티켓 새로 삽입
+            insertTicketStmt = conn.prepareStatement(insertTicketSQL);
+
+            for (String seatNumber : selectedSeats) {
+                insertTicketStmt.setDouble(1, amount / selectedSeats.size());
+                insertTicketStmt.setDouble(2, amount / selectedSeats.size());
+                insertTicketStmt.setInt(3, bookingId);
+                insertTicketStmt.setInt(4, scheduleId);
+                insertTicketStmt.setString(5, theaterId);
+                insertTicketStmt.setString(6, seatNumber);
+                insertTicketStmt.executeUpdate();
+            }
+
+            // 예매 정보 업데이트
+            updateBookingStmt = conn.prepareStatement(updateBookingSql);
+            updateBookingStmt.setString(1, paymentMethod);
+            updateBookingStmt.setString(2, paymentStatus);
+            updateBookingStmt.setDouble(3, amount);
+            updateBookingStmt.setInt(4, bookingId);
+            updateBookingStmt.executeUpdate();
+
+            conn.commit(); // 트랜잭션 커밋
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback(); // 오류 발생 시 트랜잭션 롤백
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (updateBookingStmt != null) updateBookingStmt.close();
+                if (deleteTicketStmt != null) deleteTicketStmt.close();
+                if (insertTicketStmt != null) insertTicketStmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
 }

@@ -28,4 +28,9 @@ public class Movie {
     public String getActor() { return actor; }
     public String getGenre() { return genre; }
     public String getImageUrl() { return imageUrl; }
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }

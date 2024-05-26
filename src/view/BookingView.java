@@ -103,7 +103,7 @@ public class BookingView extends JFrame {
         bookButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bookSeats();
+                createBooking();
             }
         });
         add(bookButton, BorderLayout.SOUTH);
@@ -164,8 +164,8 @@ public class BookingView extends JFrame {
         selectedSeatsCount = 0;
         selectedSeats.clear();
         for (JButton seatButton : seatButtons) {
-                seatButton.setBackground(null);
-                seatButton.setEnabled(true);  // 모든 좌석 버튼을 다시 활성화합니다.
+            seatButton.setBackground(null);
+            seatButton.setEnabled(true);  // 모든 좌석 버튼을 다시 활성화합니다.
         }
     }
 
@@ -173,10 +173,10 @@ public class BookingView extends JFrame {
      * 특정 좌석 예매하기
      *  - 같은 시간에 상영하는 영화에 대해 같은 좌석에 대한 중복 예매가 불가능하도록 처리
      */
-    private void bookSeats() {
+    private void createBooking() {
         if (selectedSeatsCount == maxSeats) {
             int theaterId = Integer.parseInt((String) theaterComboBox.getSelectedItem());
-            bookingDAO.createBook(selectedSeats, theaterId, scheduleId, "Credit Card", "Paid", 150.00, memberId); // 결제 정보를 예시로 삽입
+            bookingDAO.createBooking(selectedSeats, theaterId, scheduleId, "Credit Card", "Paid", 150.00, memberId); // 결제 정보를 예시로 삽입
             JOptionPane.showMessageDialog(this, "예매완료!!!");
             loadSeats(theaterId, scheduleId); // 좌석 상태를 갱신
         } else {
