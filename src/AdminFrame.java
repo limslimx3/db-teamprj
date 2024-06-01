@@ -89,7 +89,7 @@ public class AdminFrame extends JFrame {
         String[] createTables = {
             // 영화 테이블
             "CREATE TABLE IF NOT EXISTS `영화` (" +
-                    "`영화번호` INT NOT NULL," +
+                    "`영화번호` INT NOT NULL AUTO_INCREMENT," +
                     "`영화명` VARCHAR(255) NOT NULL," +
                     "`상영시간` INT NOT NULL," +
                     "`상영등급` VARCHAR(50) NOT NULL," +
@@ -103,14 +103,14 @@ public class AdminFrame extends JFrame {
                     "PRIMARY KEY (`영화번호`)) ENGINE = InnoDB;",
             // 상영관 테이블
             "CREATE TABLE IF NOT EXISTS `상영관` (" +
-                    "`상영관번호` INT NOT NULL," +
+                    "`상영관번호` INT NOT NULL AUTO_INCREMENT," +
                     "`가로좌석수` INT NOT NULL," +
                     "`세로좌석수` INT NOT NULL," +
                     "`상영관사용여부` TINYINT NOT NULL," +
                     "PRIMARY KEY (`상영관번호`)) ENGINE = InnoDB;",
             // 상영일정 테이블
             "CREATE TABLE IF NOT EXISTS `상영일정` (" +
-                    "`상영일정번호` INT NOT NULL," +
+                    "`상영일정번호` INT NOT NULL AUTO_INCREMENT," +
                     "`상영시작일` DATE NOT NULL," +
                     "`상영요일` VARCHAR(10) NOT NULL," +
                     "`상영회차` INT NOT NULL," +
@@ -132,7 +132,7 @@ public class AdminFrame extends JFrame {
                     "ON UPDATE NO ACTION) ENGINE = InnoDB;",
             // 좌석 테이블
             "CREATE TABLE IF NOT EXISTS `좌석` (" +
-                    "`좌석번호` INT NOT NULL," +
+                    "`좌석번호` INT NOT NULL AUTO_INCREMENT," +
                     "`좌석사용여부` TINYINT NOT NULL," +
                     "`상영관번호` INT NOT NULL," +
                     "PRIMARY KEY (`좌석번호`)," +
@@ -144,7 +144,7 @@ public class AdminFrame extends JFrame {
                     "ON UPDATE NO ACTION) ENGINE = InnoDB;",
             // 회원 테이블
             "CREATE TABLE IF NOT EXISTS `회원` (" +
-                    "`회원번호` INT NOT NULL," +
+                    "`회원번호` INT NOT NULL AUTO_INCREMENT," +
                     "`회원아이디` VARCHAR(50) NOT NULL," +
                     "`고객명` VARCHAR(100) NOT NULL," +
                     "`휴대폰번호` VARCHAR(20) NOT NULL," +
@@ -152,7 +152,7 @@ public class AdminFrame extends JFrame {
                     "PRIMARY KEY (`회원번호`)) ENGINE = InnoDB;",
             // 예매 테이블
             "CREATE TABLE IF NOT EXISTS `예매` (" +
-                    "`예매번호` INT NOT NULL," +
+                    "`예매번호` INT NOT NULL AUTO_INCREMENT," +
                     "`결제방법` VARCHAR(50) NOT NULL," +
                     "`결제상태` VARCHAR(20) NOT NULL," +
                     "`결제금액` DECIMAL(10,2) NOT NULL," +
@@ -167,7 +167,7 @@ public class AdminFrame extends JFrame {
                     "ON UPDATE NO ACTION) ENGINE = InnoDB;",
             // 티켓 테이블
             "CREATE TABLE IF NOT EXISTS `티켓` (" +
-                    "`티켓번호` INT NOT NULL," +
+                    "`티켓번호` INT NOT NULL AUTO_INCREMENT," +
                     "`발권여부` TINYINT NOT NULL," +
                     "`표준가격` DECIMAL(10,2) NOT NULL," +
                     "`판매가격` DECIMAL(10,2) NOT NULL," +
@@ -204,109 +204,176 @@ public class AdminFrame extends JFrame {
         
         String[] insertSampleData = {
                 // 영화 테이블 샘플 데이터
-                "INSERT INTO `영화` (`영화번호`, `영화명`, `상영시간`, `상영등급`, `감독명`, `배우명`, `장르`, `영화소개`, `개봉일자`, `평점`, `썸네일경로`) VALUES " +
-                        "(1, 'Movie 1', 120, 'PG', 'Director 1', 'Actor 1', 'Genre 1', 'Description 1', '2023-01-01', 4.5, '/path/to/thumbnail1.jpg')," +
-                        "(2, 'Movie 2', 130, 'PG-13', 'Director 2', 'Actor 2', 'Genre 2', 'Description 2', '2023-02-01', 4.0, '/path/to/thumbnail2.jpg')," +
-                        "(3, 'Movie 3', 110, 'R', 'Director 3', 'Actor 3', 'Genre 3', 'Description 3', '2023-03-01', 3.5, '/path/to/thumbnail3.jpg')," +
-                        "(4, 'Movie 4', 100, 'G', 'Director 4', 'Actor 4', 'Genre 4', 'Description 4', '2023-04-01', 4.2, '/path/to/thumbnail4.jpg')," +
-                        "(5, 'Movie 5', 140, 'PG', 'Director 5', 'Actor 5', 'Genre 5', 'Description 5', '2023-05-01', 4.1, '/path/to/thumbnail5.jpg')," +
-                        "(6, 'Movie 6', 90, 'PG-13', 'Director 6', 'Actor 6', 'Genre 6', 'Description 6', '2023-06-01', 3.8, '/path/to/thumbnail6.jpg')," +
-                        "(7, 'Movie 7', 95, 'R', 'Director 7', 'Actor 7', 'Genre 7', 'Description 7', '2023-07-01', 4.7, '/path/to/thumbnail7.jpg')," +
-                        "(8, 'Movie 8', 105, 'G', 'Director 8', 'Actor 8', 'Genre 8', 'Description 8', '2023-08-01', 4.6, '/path/to/thumbnail8.jpg')," +
-                        "(9, 'Movie 9', 115, 'PG', 'Director 9', 'Actor 9', 'Genre 9', 'Description 9', '2023-09-01', 4.3, '/path/to/thumbnail9.jpg')," +
-                        "(10, 'Movie 10', 125, 'PG-13', 'Director 10', 'Actor 10', 'Genre 10', 'Description 10', '2023-10-01', 4.4, '/path/to/thumbnail10.jpg')," +
-                        "(11, 'Movie 11', 135, 'R', 'Director 11', 'Actor 11', 'Genre 11', 'Description 11', '2023-11-01', 3.9, '/path/to/thumbnail11.jpg')," +
-                        "(12, 'Movie 12', 145, 'G', 'Director 12', 'Actor 12', 'Genre 12', 'Description 12', '2023-12-01', 4.0, '/path/to/thumbnail12.jpg');",
+                "INSERT INTO `영화` (`영화명`, `상영시간`, `상영등급`, `감독명`, `배우명`, `장르`, `영화소개`, `개봉일자`, `평점`, `썸네일경로`) VALUES " +
+                        "('다크나이트', 120, 'PG', 'Director 1', 'Actor 1', 'Genre 1', 'Description 1', '2023-01-01', 4.5, 'https://i.namu.wiki/i/yy3QCR19WQUZ-LE1Bb6uNhQg2R44me6q6GcaSYeT9iBhO8Yavedoqz_YOS154Pz74AeUpY6y_rfRQfsI2WOSBr9LrsgRCSuS73AKMsj7N6ndNzfvEybao6B5_3JXt_YuHKnCTs5o-5MmRPhyWwsA8A.webp')," +
+                        "('범죄도시 4', 130, 'PG-13', 'Director 2', 'Actor 2', 'Genre 2', 'Description 2', '2023-02-01', 4.0, 'https://i.namu.wiki/i/rrHaHzTJSB5C7asmwf7DtFFVhVRB7mHMxo3W2UgFEskNo7zpQI68SL_2M7Bbftl3YoM-6yp-ydelIm7U2pOwHw.webp')," +
+                        "('어벤져스: 엔드게임', 110, 'R', 'Director 3', 'Actor 3', 'Genre 3', 'Description 3', '2023-03-01', 3.5, 'https://i.namu.wiki/i/rabdKlw4XNtUHbujHKU4LDULzxeXHjG1gtozrwgREYuSXhyzSyylG4qxIJklRiId3fhE8nKV05bj66LgbvmcwAB1qurm7UgGyW2YFXDMh7hxEWmH0Tk3QbeIzq9GxZMz49rosU3Lpr9Kqhz0V7Q92A.webp')," +
+                        "('서울의 봄', 100, 'G', 'Director 4', 'Actor 4', 'Genre 4', 'Description 4', '2023-04-01', 4.2, 'https://i.namu.wiki/i/FtWfPphkw8YY6_HyOusuEF8fYbbvDLu8fDgtts1CgW5-Sr68aGpXf9EKbUEdZJKxtspySPk0GvHWl_PSwA-bFFLBMF1lhrFyoxK0e1NApFBUDvlFCJ7sWBYMDvRLWYIW6ldcAYNc5_ijadiPppm2HQ.webp')," +
+                        "('파묘', 140, 'PG', 'Director 5', 'Actor 5', 'Genre 5', 'Description 5', '2023-05-01', 4.1, 'https://i.namu.wiki/i/yDTZ57ljy6TC6rkCzp63CxA9BxBuJY3EaxnGc_fTzCRW6CNPWAR6N5H1rH1E_bf95FpxgqEm3elSgrdu4-B-2QPFpZNLoOJd-NCocdUCxR_6l8wihuQlfrMbxol7WHWPgG54FQu32pmnFP7WHuRmTQ.webp')," +
+                        "('노량: 죽음의 바다', 90, 'PG-13', 'Director 6', 'Actor 6', 'Genre 6', 'Description 6', '2023-06-01', 3.8, 'https://i.namu.wiki/i/qu_qXbfQstjLRHMDF-l9pTT9By0HOdff6FNgKkfvwId3ultKLHqRh3THUPGMR4F4JhtTtyuxGGlnGU9ftCzgBy3XI4aI2wmQ5iLJu-NV2JvWyakcTgwHTVVQe0V4N4IncXRZW11TuoXdsVPNuV9aZw.webp')," +
+                        "('탑건: 매버릭', 95, 'R', 'Director 7', 'Actor 7', 'Genre 7', 'Description 7', '2023-07-01', 4.7, 'https://i.namu.wiki/i/V6Unitd2yJ_VePIGmQY6WBdyqh8GF0dg4qACx6ftLFVzhfk-Hl6DAkh9PLcGn6sMYPNSsk57NTqY2ccm-4VYZ4eUp9wkGv_9jTIQk1rgbGRC34rqQb5dMoTrWQVbmQFgYXaHtNx0riVMylVE3opoZw.webp')," +
+                        "('닥터 스트레인지: 대혼돈의 멀티버스', 105, 'G', 'Director 8', 'Actor 8', 'Genre 8', 'Description 8', '2023-08-01', 4.6, 'https://i.namu.wiki/i/iGgLHq3h4ysOdixJ-_2fABIG7XwYPtB3lbH6Am75yCONl5BWf2QHh0ak-7n8HrDaUojhU7OE7-1Z4KuPPwDFDI9ohvbf3Vg6KYUks_9vzSuVOSYujsYB_T1AiWefxHr5tIdN11bkvgbn7-H2kqVhjw.webp')," +
+                        "('스파이더맨: 노 웨이 홈', 115, 'PG', 'Director 9', 'Actor 9', 'Genre 9', 'Description 9', '2023-09-01', 4.3, 'https://i.namu.wiki/i/C0_gN7pz-bfkOMgnnNMgRKxy5mSlQnSt8CrVn7PH1tsG9-AI8CJpJ3ma9CwaVROaocyIWcPx5RO242rmYgSKkfu1MjR8NK2zP5a2S2zXS9QUS-3VuUHfzQoch716Nb43HrJuz94czuNeK81HsYk7bw.webp')," +
+                        "('설계자', 125, 'PG-13', 'Director 10', 'Actor 10', 'Genre 10', 'Description 10', '2023-10-01', 4.4, 'https://i.namu.wiki/i/_E-gHBFduISr7YCXK0zmIZqZiBQWPMSajMKFHMmotZJMksw3w7MmD3JXbNYWAeDt2-13TqHaXlUXF_UZXRtN5d-D452RHXVl8CHxb4Of4krFpG50LcTXY0Turh-ehj0HuJk-fr6qtu63caMr1uy3cg.webp')," +
+                        "('원더랜드', 135, 'R', 'Director 11', 'Actor 11', 'Genre 11', 'Description 11', '2023-11-01', 3.9, 'https://i.namu.wiki/i/QknaiqCw4xwbsUklEp2B2oR780Oj3-yrLl02jJJhkpLZeLmvYYqVH9PCljTcTE3pzNME3EyD1-I7johitUhpIdwHED2p-DKXbLGNCVMLJimqwQGqaTiQBK4ZpxAT9smMNRubK_63BGsQACOAImKUAQ.webp')," +
+                        "('극한직업', 145, 'G', 'Director 12', 'Actor 12', 'Genre 12', 'Description 12', '2023-12-01', 4.0, 'https://i.namu.wiki/i/p1BiWL3ktoW6sHTa090SEN8_QiPh1zde_-k3JlpZMTdAVqce0txJD4tUBEIJJhuEoETLaghmBiQ7OXpnT8zCwL0SwKsJlH6yswJD1H3IGPBlwP34ppsQAupCrYMaylbJy-Pn_szEuV7Hy9T-hd2dgw.webp');",
 
                 // 상영관 테이블 샘플 데이터
-                "INSERT INTO `상영관` (`상영관번호`, `가로좌석수`, `세로좌석수`, `상영관사용여부`) VALUES " +
-                        "(1, 3, 3, 1)," +
-                        "(2, 4, 4, 1)," +
-                        "(3, 5, 5, 1)," +
-                        "(4, 6, 6, 1)," +
-                        "(5, 2, 2, 1)," +
-                        "(6, 3, 3, 1)," +
-                        "(7, 4, 4, 1)," +
-                        "(8, 5, 5, 1)," +
-                        "(9, 6, 6, 1)," +
-                        "(10, 4, 4, 1)," +
-                        "(11, 5, 5, 1)," +
-                        "(12, 10, 10, 1);",
+                "INSERT INTO `상영관` (`가로좌석수`, `세로좌석수`, `상영관사용여부`) VALUES " +
+                		"(3, 3, 1)," +
+                		"(4, 4, 1)," +
+                		"(5, 5, 1)," +
+                		"(6, 6, 1)," +
+                		"(2, 2, 1)," +
+                		"(3, 3, 1)," +
+                		"(4, 4, 1)," +
+                		"(5, 5, 1)," +
+                		"(6, 6, 1)," +
+                		"(4, 4, 1)," +
+                		"(5, 5, 1)," +
+                		"(10, 10, 1);",
 
                 // 상영일정 테이블 샘플 데이터
-                "INSERT INTO `상영일정` (`상영일정번호`, `상영시작일`, `상영요일`, `상영회차`, `상영시작시간`, `상영관번호`, `영화번호`) VALUES " +
-                        "(1, '2023-01-01', 'Monday', 1, '10:00:00', 1, 1)," +
-                        "(2, '2023-01-02', 'Tuesday', 2, '12:00:00', 2, 2)," +
-                        "(3, '2023-01-03', 'Wednesday', 3, '14:00:00', 3, 3)," +
-                        "(4, '2023-01-04', 'Thursday', 4, '16:00:00', 4, 4)," +
-                        "(5, '2023-01-05', 'Friday', 5, '18:00:00', 5, 5)," +
-                        "(6, '2023-01-06', 'Saturday', 6, '20:00:00', 6, 6)," +
-                        "(7, '2023-01-07', 'Sunday', 7, '22:00:00', 7, 7)," +
-                        "(8, '2023-01-08', 'Monday', 1, '10:00:00', 8, 8)," +
-                        "(9, '2023-01-09', 'Tuesday', 2, '12:00:00', 9, 9)," +
-                        "(10, '2023-01-10', 'Wednesday', 3, '14:00:00', 10, 10)," +
-                        "(11, '2023-01-11', 'Thursday', 4, '16:00:00', 11, 11)," +
-                        "(12, '2023-01-12', 'Friday', 5, '18:00:00', 12, 12);",
+                "INSERT INTO `상영일정` (`상영시작일`, `상영요일`, `상영회차`, `상영시작시간`, `상영관번호`, `영화번호`) VALUES " +
+                        "('2023-01-01', 'Monday', 1, '10:00:00', 1, 1)," +
+                        "('2023-01-02', 'Tuesday', 2, '12:00:00', 2, 2)," +
+                        "('2023-01-03', 'Wednesday', 3, '14:00:00', 3, 3)," +
+                        "('2023-01-04', 'Thursday', 4, '16:00:00', 4, 4)," +
+                        "('2023-01-05', 'Friday', 5, '18:00:00', 5, 5)," +
+                        "('2023-01-06', 'Saturday', 6, '20:00:00', 6, 6)," +
+                        "('2023-01-07', 'Sunday', 7, '22:00:00', 7, 7)," +
+                        "('2023-01-08', 'Monday', 1, '10:00:00', 8, 8)," +
+                        "('2023-01-09', 'Tuesday', 2, '12:00:00', 9, 9)," +
+                        "('2023-01-10', 'Wednesday', 3, '14:00:00', 10, 10)," +
+                        "('2023-01-11', 'Thursday', 4, '16:00:00', 11, 11)," +
+                        "('2023-01-12', 'Friday', 5, '18:00:00', 12, 12);",
 
                 // 좌석 테이블 샘플 데이터
-                "INSERT INTO `좌석` (`좌석번호`, `좌석사용여부`, `상영관번호`) VALUES " +
-                        "(1, 1, 1)," +
-                        "(2, 1, 1)," +
-                        "(3, 1, 1)," +
-                        "(4, 1, 1)," +
-                        "(5, 1, 1)," +
-                        "(6, 1, 1)," +
-                        "(7, 1, 1)," +
-                        "(8, 1, 1)," +
-                        "(9, 1, 1)," +
-                        "(10, 1, 1)," +
-                        "(11, 1, 1)," +
-                        "(12, 1, 1);",
+                "INSERT INTO `좌석` (`좌석사용여부`, `상영관번호`) VALUES " +
+                		"(1, 1)," + "(1, 1)," + "(1, 1)," + "(1, 1)," + "(1, 1)," +
+                		"(1, 1)," + "(1, 1)," + "(1, 1)," + "(1, 1)," + 
+								                        
+						"(1, 2)," + "(1, 2)," + "(1, 2)," + "(1, 2)," + "(1, 2)," +
+						"(1, 2)," + "(1, 2)," + "(1, 2)," + "(1, 2)," + "(1, 2)," +
+						"(1, 2)," + "(1, 2)," + "(1, 2)," + "(1, 2)," + "(1, 2)," +
+						"(1, 2)," + 
+								                        
+						"(1, 3)," + "(1, 3)," + "(1, 3)," + "(1, 3)," + "(1, 3)," +
+						"(1, 3)," + "(1, 3)," + "(1, 3)," + "(1, 3)," + "(1, 3)," +
+						"(1, 3)," + "(1, 3)," + "(1, 3)," + "(1, 3)," + "(1, 3)," +
+						"(1, 3)," + "(1, 3)," + "(1, 3)," + "(1, 3)," + "(1, 3)," +
+						"(1, 3)," + "(1, 3)," + "(1, 3)," + "(1, 3)," + "(1, 3)," +
+								                        
+						"(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," +
+						"(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," + 
+						"(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," +
+						"(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," +
+						"(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," +
+						"(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," +
+						"(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," + "(1, 4)," +
+						"(1, 4)," +
+								                        
+						"(1, 5)," + "(1, 5)," + "(1, 5)," + "(1, 5)," +
+								                        
+						"(1, 6)," + "(1, 6)," + "(1, 6)," + "(1, 6)," + "(1, 6)," +
+						"(1, 6)," + "(1, 6)," + "(1, 6)," + "(1, 6)," +
+								                        
+						"(1, 7)," + "(1, 7)," + "(1, 7)," + "(1, 7)," + "(1, 7)," +
+						"(1, 7)," + "(1, 7)," + "(1, 7)," + "(1, 7)," + "(1, 7)," +
+						"(1, 7)," + "(1, 7)," + "(1, 7)," + "(1, 7)," + "(1, 7)," +
+						"(1, 7)," +
+                                                        
+						"(1, 8)," + "(1, 8)," + "(1, 8)," + "(1, 8)," + "(1, 8)," +
+						"(1, 8)," + "(1, 8)," + "(1, 8)," + "(1, 8)," + "(1, 8)," +
+						"(1, 8)," + "(1, 8)," + "(1, 8)," + "(1, 8)," + "(1, 8)," +
+						"(1, 8)," + "(1, 8)," + "(1, 8)," + "(1, 8)," + "(1, 8)," +
+						"(1, 8)," + "(1, 8)," + "(1, 8)," + "(1, 8)," + "(1, 8)," +
+                                                        
+						"(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," +
+						"(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," + 
+						"(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," +
+						"(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," +
+						"(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," +
+						"(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," +
+						"(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," + "(1, 9)," +
+						"(1, 9)," +
+								                        
+						"(1, 10)," + "(1, 10)," + "(1, 10)," + "(1, 10)," + "(1, 10)," +
+						"(1, 10)," + "(1, 10)," + "(1, 10)," + "(1, 10)," + "(1, 10)," + 	
+						"(1, 10)," + "(1, 10)," + "(1, 10)," + "(1, 10)," + "(1, 10)," +
+						"(1, 10)," + 
+                                                        
+						"(1, 11)," + "(1, 11)," + "(1, 11)," + "(1, 11)," + "(1, 11)," +
+						"(1, 11)," + "(1, 11)," + "(1, 11)," + "(1, 11)," + "(1, 11)," +
+						"(1, 11)," + "(1, 11)," + "(1, 11)," + "(1, 11)," + "(1, 11)," +
+						"(1, 11)," + "(1, 11)," + "(1, 11)," + "(1, 11)," + "(1, 11)," +
+						"(1, 11)," + "(1, 11)," + "(1, 11)," + "(1, 11)," + "(1, 11)," +
+								                        
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," +   
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," +   
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," +  
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + 
+						"(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12)," + "(1, 12);",
 
                 // 회원 테이블 샘플 데이터
-                "INSERT INTO `회원` (`회원번호`, `회원아이디`, `고객명`, `휴대폰번호`, `전자메일주소`) VALUES " +
-                        "(1, 'user1', 'User One', '010-1111-1111', 'user1@example.com')," +
-                        "(2, 'user2', 'User Two', '010-2222-2222', 'user2@example.com')," +
-                        "(3, 'user3', 'User Three', '010-3333-3333', 'user3@example.com')," +
-                        "(4, 'user4', 'User Four', '010-4444-4444', 'user4@example.com')," +
-                        "(5, 'user5', 'User Five', '010-5555-5555', 'user5@example.com')," +
-                        "(6, 'user6', 'User Six', '010-6666-6666', 'user6@example.com')," +
-                        "(7, 'user7', 'User Seven', '010-7777-7777', 'user7@example.com')," +
-                        "(8, 'user8', 'User Eight', '010-8888-8888', 'user8@example.com')," +
-                        "(9, 'user9', 'User Nine', '010-9999-9999', 'user9@example.com')," +
-                        "(10, 'user10', 'User Ten', '010-1010-1010', 'user10@example.com')," +
-                        "(11, 'user11', 'User Eleven', '010-1111-1112', 'user11@example.com')," +
-                        "(12, 'user12', 'User Twelve', '010-1212-1212', 'user12@example.com');",
+                "INSERT INTO `회원` (`회원아이디`, `고객명`, `휴대폰번호`, `전자메일주소`) VALUES " +
+                        "('user1', 'User One', '010-1111-1111', 'user1@example.com')," +
+                        "('user2', 'User Two', '010-2222-2222', 'user2@example.com')," +
+                        "('user3', 'User Three', '010-3333-3333', 'user3@example.com')," +
+                        "('user4', 'User Four', '010-4444-4444', 'user4@example.com')," +
+                        "('user5', 'User Five', '010-5555-5555', 'user5@example.com')," +
+                        "('user6', 'User Six', '010-6666-6666', 'user6@example.com')," +
+                        "('user7', 'User Seven', '010-7777-7777', 'user7@example.com')," +
+                        "('user8', 'User Eight', '010-8888-8888', 'user8@example.com')," +
+                        "('user9', 'User Nine', '010-9999-9999', 'user9@example.com')," +
+                        "('user10', 'User Ten', '010-1010-1010', 'user10@example.com')," +
+                        "('user11', 'User Eleven', '010-1111-1112', 'user11@example.com')," +
+                        "('user12', 'User Twelve', '010-1212-1212', 'user12@example.com');",
 
                 // 예매 테이블 샘플 데이터
-                "INSERT INTO `예매` (`예매번호`, `결제방법`, `결제상태`, `결제금액`, `결제일자`, `회원번호`) VALUES " +
-                        "(1, 'Credit Card', 'Completed', 10000.00, '2023-01-01', 1)," +
-                        "(2, 'Credit Card', 'Completed', 20000.00, '2023-01-02', 2)," +
-                        "(3, 'Credit Card', 'Completed', 30000.00, '2023-01-03', 3)," +
-                        "(4, 'Credit Card', 'Completed', 40000.00, '2023-01-04', 4)," +
-                        "(5, 'Credit Card', 'Completed', 50000.00, '2023-01-05', 5)," +
-                        "(6, 'Credit Card', 'Completed', 60000.00, '2023-01-06', 6)," +
-                        "(7, 'Credit Card', 'Completed', 70000.00, '2023-01-07', 7)," +
-                        "(8, 'Credit Card', 'Completed', 80000.00, '2023-01-08', 8)," +
-                        "(9, 'Credit Card', 'Completed', 90000.00, '2023-01-09', 9)," +
-                        "(10, 'Credit Card', 'Completed', 100000.00, '2023-01-10', 10)," +
-                        "(11, 'Credit Card', 'Completed', 110000.00, '2023-01-11', 11)," +
-                        "(12, 'Credit Card', 'Completed', 120000.00, '2023-01-12', 12);",
+                "INSERT INTO `예매` (`결제방법`, `결제상태`, `결제금액`, `결제일자`, `회원번호`) VALUES " +
+                        "('Credit Card', 'Completed', 10000.00, '2023-01-01', 1)," +
+                        "('Credit Card', 'Completed', 20000.00, '2023-01-02', 2)," +
+                        "('Credit Card', 'Completed', 30000.00, '2023-01-03', 3)," +
+                        "('Credit Card', 'Completed', 40000.00, '2023-01-04', 4)," +
+                        "('Credit Card', 'Completed', 50000.00, '2023-01-05', 5)," +
+                        "('Credit Card', 'Completed', 60000.00, '2023-01-06', 6)," +
+                        "('Credit Card', 'Completed', 70000.00, '2023-01-07', 7)," +
+                        "('Credit Card', 'Completed', 80000.00, '2023-01-08', 8)," +
+                        "('Credit Card', 'Completed', 90000.00, '2023-01-09', 9)," +
+                        "('Credit Card', 'Completed', 100000.00, '2023-01-10', 10)," +
+                        "('Credit Card', 'Completed', 110000.00, '2023-01-11', 11)," +
+                        "('Credit Card', 'Completed', 120000.00, '2023-01-12', 12);",
 
                 // 티켓 테이블 샘플 데이터
-                "INSERT INTO `티켓` (`티켓번호`, `발권여부`, `표준가격`, `판매가격`, `예매번호`, `상영일정번호`, `상영관번호`, `좌석번호`) VALUES " +
-                        "(1, 1, 12000.00, 10000.00, 1, 1, 1, 1)," +
-                        "(2, 1, 12000.00, 20000.00, 2, 2, 2, 2)," +
-                        "(3, 1, 12000.00, 30000.00, 3, 3, 3, 3)," +
-                        "(4, 1, 12000.00, 40000.00, 4, 4, 4, 4)," +
-                        "(5, 1, 12000.00, 50000.00, 5, 5, 5, 5)," +
-                        "(6, 1, 12000.00, 60000.00, 6, 6, 6, 6)," +
-                        "(7, 1, 12000.00, 70000.00, 7, 7, 7, 7)," +
-                        "(8, 1, 12000.00, 80000.00, 8, 8, 8, 8)," +
-                        "(9, 1, 12000.00, 90000.00, 9, 9, 9, 9)," +
-                        "(10, 1, 12000.00, 100000.00, 10, 10, 10, 10)," +
-                        "(11, 1, 12000.00, 110000.00, 11, 11, 11, 11)," +
-                        "(12, 1, 12000.00, 120000.00, 12, 12, 12, 12);"
+                "INSERT INTO `티켓` (`발권여부`, `표준가격`, `판매가격`, `예매번호`, `상영일정번호`, `상영관번호`, `좌석번호`) VALUES " +
+                        "(1, 12000.00, 10000.00, 1, 1, 1, 1)," +
+                        "(1, 12000.00, 20000.00, 2, 2, 2, 2)," +
+                        "(1, 12000.00, 30000.00, 3, 3, 3, 3)," +
+                        "(1, 12000.00, 40000.00, 4, 4, 4, 4)," +
+                        "(1, 12000.00, 50000.00, 5, 5, 5, 5)," +
+                        "(1, 12000.00, 60000.00, 6, 6, 6, 6)," +
+                        "(1, 12000.00, 70000.00, 7, 7, 7, 7)," +
+                        "(1, 12000.00, 80000.00, 8, 8, 8, 8)," +
+                        "(1, 12000.00, 90000.00, 9, 9, 9, 9)," +
+                        "(1, 12000.00, 100000.00, 10, 10, 10, 10)," +
+                        "(1, 12000.00, 110000.00, 11, 11, 11, 11)," +
+                        "(1, 12000.00, 120000.00, 12, 12, 12, 12);"
             };
         
 
