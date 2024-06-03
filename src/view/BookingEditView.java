@@ -51,7 +51,7 @@ public class BookingEditView extends JFrame {
 
     private void initializeUI() {
         setTitle("영화 예매 수정");
-        setSize(600, 500);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -85,6 +85,9 @@ public class BookingEditView extends JFrame {
         peopleComboBox.addActionListener(e -> {
             maxSeats = (Integer) peopleComboBox.getSelectedItem();
             resetSeats();
+            if (theaterComboBox.getSelectedItem() != null && dayComboBox.getSelectedItem() != null && timeComboBox.getSelectedItem() != null) {
+                loadSeats(Integer.parseInt(theaterComboBox.getSelectedItem().toString()), scheduleId);
+            }
         });
 
         seatPanel = new JPanel(new GridLayout(5, 5, 5, 5));
@@ -153,8 +156,8 @@ public class BookingEditView extends JFrame {
     }
 
     private void onSeatSelected(ActionEvent e) {
+        JButton seatButton = (JButton) e.getSource();
         if (selectedSeatsCount < maxSeats) {
-            JButton seatButton = (JButton) e.getSource();
             seatButton.setBackground(Color.GREEN);
             seatButton.setEnabled(false);
             selectedSeats.add(seatButton.getText());
@@ -191,7 +194,7 @@ public class BookingEditView extends JFrame {
         String paymentStatus = "Paid";
         double amount = 150.00;
 
-         bookingDAO.updateBooking(bookId, theaterId, scheduleId, selectedSeats, paymentMethod, paymentStatus, amount);
+        bookingDAO.updateBooking(bookId, theaterId, scheduleId, selectedSeats, paymentMethod, paymentStatus, amount);
 
         JOptionPane.showMessageDialog(this, "예매가 변경되었습니다.");
         dispose();

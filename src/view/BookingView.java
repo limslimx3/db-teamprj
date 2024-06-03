@@ -40,81 +40,50 @@ public class BookingView extends JFrame {
 
         // UI 구성
         setTitle("영화 예매");
-        setSize(600, 400);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         setLayout(new BorderLayout());
-
-        // 상영관, 상영 요일, 상영 시간, 인원 선택 패널
         JPanel selectionPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         selectionPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        // 상영관 선택
         selectionPanel.add(new JLabel("상영관:"));
         theaterComboBox = new JComboBox<>();
         loadTheaters();
-        theaterComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadSchedules();
-            }
-        });
+        theaterComboBox.addActionListener(e -> loadSchedules());
         selectionPanel.add(theaterComboBox);
 
-        // 상영 요일 선택
         selectionPanel.add(new JLabel("날짜:"));
         dayComboBox = new JComboBox<>();
         selectionPanel.add(dayComboBox);
 
-        // 상영 시간 선택
         selectionPanel.add(new JLabel("시간:"));
         timeComboBox = new JComboBox<>();
         selectionPanel.add(timeComboBox);
 
-        // 인원 선택
         selectionPanel.add(new JLabel("인원수:"));
         peopleComboBox = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5});
-        peopleComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                maxSeats = (Integer) peopleComboBox.getSelectedItem();
-                resetSeats();
-                seatPanel.revalidate();
-                seatPanel.repaint();
-            }
+        peopleComboBox.addActionListener(e -> {
+            maxSeats = (Integer) peopleComboBox.getSelectedItem();
+            loadSeats(Integer.parseInt(theaterComboBox.getSelectedItem().toString()), scheduleId);  // 리로드하여 예약된 좌석을 비활성화
         });
         selectionPanel.add(peopleComboBox);
 
-
-
         add(selectionPanel, BorderLayout.NORTH);
 
-        // 좌석 선택 패널
         seatPanel = new JPanel();
         seatPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         add(seatPanel, BorderLayout.CENTER);
-
-        // 좌석 버튼 초기화
         seatButtons = new ArrayList<>();
 
-        // 예매 버튼
         JButton bookButton = new JButton("예매하기");
-        bookButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                createBooking();
-            }
-        });
+        bookButton.addActionListener(e -> createBooking());
         add(bookButton, BorderLayout.SOUTH);
 
-        // 초기 설정
         maxSeats = (Integer) peopleComboBox.getSelectedItem();
     }
 
-    /**
-     * 상영관 콤보박스에 해당 영화가 상영되는 상영관 리스트 로드
-     */
     private void loadTheaters() {
         List<String> theaters = theaterDAO.getTheaters(movieId);
         theaterComboBox.removeAllItems();
@@ -123,9 +92,6 @@ public class BookingView extends JFrame {
         }
     }
 
-    /**
-     * 선택된 상영관에 대한 상영일정 로드
-     */
     private void loadSchedules() {
         String theaterId = (String) theaterComboBox.getSelectedItem();
         List<Schedule> schedules = theaterDAO.getSchedules(movieId, theaterId);
@@ -141,14 +107,11 @@ public class BookingView extends JFrame {
         }
     }
 
-    /**
-     * 선택된 영화관과 영화일정에 대해 티켓이 존재하지 않는 좌석 정보 로드
-     */
     private void loadSeats(int theaterId, int scheduleId) {
         List<Seat> seats = theaterDAO.getSeats(theaterId, scheduleId);
         seatPanel.removeAll();
-        seatPanel.setLayout(new GridLayout(5, 5, 5, 5)); // 임의의 크기. 실제 좌석 배치에 맞게 변경 가능
         seatButtons.clear();
+        seatPanel.setLayout(new GridLayout(5, 5, 5, 5));
         for (Seat seat : seats) {
             JButton seatButton = new JButton(seat.getSeatNumber());
             seatButton.setEnabled(seat.isAvailable());
@@ -160,25 +123,12 @@ public class BookingView extends JFrame {
         seatPanel.repaint();
     }
 
-    private void resetSeats() {
-        selectedSeatsCount = 0;
-        selectedSeats.clear();
-        for (JButton seatButton : seatButtons) {
-            seatButton.setBackground(null);
-            seatButton.setEnabled(true);  // 모든 좌석 버튼을 다시 활성화합니다.
-        }
-    }
-
-    /**
-     * 특정 좌석 예매하기
-     *  - 같은 시간에 상영하는 영화에 대해 같은 좌석에 대한 중복 예매가 불가능하도록 처리
-     */
     private void createBooking() {
         if (selectedSeatsCount == maxSeats) {
             int theaterId = Integer.parseInt((String) theaterComboBox.getSelectedItem());
-            bookingDAO.createBooking(selectedSeats, theaterId, scheduleId, "Credit Card", "Paid", 150.00, memberId); // 결제 정보를 예시로 삽입
+            bookingDAO.createBooking(selectedSeats, theaterId, scheduleId, "Credit Card", "Paid", 150.00, memberId);
             JOptionPane.showMessageDialog(this, "예매완료!!!");
-            loadSeats(theaterId, scheduleId); // 좌석 상태를 갱신
+            loadSeats(theaterId, scheduleId);
         } else {
             JOptionPane.showMessageDialog(this, "Please select " + maxSeats + " seats.");
         }
@@ -187,8 +137,8 @@ public class BookingView extends JFrame {
     private class SeatButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (selectedSeatsCount < maxSeats) {
-                JButton seatButton = (JButton) e.getSource();
+            JButton seatButton = (JButton) e.getSource();
+            if (selectedSeatsCount < maxSeats && seatButton.isEnabled()) {
                 seatButton.setBackground(Color.GREEN);
                 seatButton.setEnabled(false);
                 selectedSeats.add(seatButton.getText());
